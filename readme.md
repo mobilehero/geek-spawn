@@ -1,4 +1,4 @@
-> **NOT YET IMPLEMENTED**
+> **Work in progresss**
 
 # spawn
 
@@ -15,7 +15,7 @@ $ npm install @geek/spawn
 
 ## usage
 
-** Asynchronous **
+**Asynchronous**
 
 ```javascript
 
@@ -24,7 +24,7 @@ spawn('echo', ['this is a test']);
 
 ```
 
-** Synchronous **
+**Synchronous**
 
 ```javascript
 
