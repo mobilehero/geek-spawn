@@ -1,29 +1,32 @@
 var _ = require("lodash");
 var semver = require("semver");
-// var tiapp = require("tiapp.xml").load('./tiapp.xml');
-// var initial_version = tiapp.version;
-
-var package = require("../package");
-var initial_version = package.version;
-
-var versions = initial_version.split('.');
-var major = _.parseInt(versions[0]) || 1;
-var minor = _.parseInt(versions[1]) || 0;
-var build = _.parseInt(versions[2]) || 0;
-var revision = _.parseInt(versions[3]) || 0;
-
-// revision++;
-
-// tiapp.version = major + "." + minor + "." + build + "." + revision;
-// tiapp.write();
-
 var spawn = require('child_process').spawn;
-console.log("initial_version: " + initial_version);
 
-// var new_version = major + "." + minor + ".beta-" + build + "." + revision;
+// Process any arguments
+var args = process.argv.slice(2);
+var message;
+if(args.length === 0) {
+	message = "Uh, everything is under control. Situation normal.";
+} else {
+	message = args.join(" ");
+}
 
-var new_version = semver.inc(initial_version, 'prerelease', 'beta');
+if(!_.includes(message, "{{")) {
+	message = ":checkered_flag: v{{version}} :heavy_minus_sign: " + message;
+}
+
+// Load current version
+var package = require("../package");
+console.log("package.version: " + package.version);
+
+// Create new version
+var new_version = semver.inc(package.version, 'prerelease', 'beta');
 console.log("new_version: " + new_version);
+
+// Format commit message
+_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+var formatted_message = _.template(message)({ version: new_version });
+console.log("formatted_message: " + formatted_message);
 
 var git_cmd = "git";
 if(process.platform === 'win32') {
@@ -32,30 +35,50 @@ if(process.platform === 'win32') {
 	var npm_cmd = 'npm'
 }
 
-//kick off process
+//kick off npm process
 var npm = spawn(npm_cmd, ['--no-git-tag-version', 'version', new_version]);
 var git;
 
 //spit stdout to screen
 npm.stdout.on('data', function(data) { process.stdout.write(data.toString()); });
 
-// //spit stderr to screen 	
+//spit stderr to screen 	
 npm.stderr.on('data', function(data) { process.stdout.write(data.toString()); });
 
 npm.on('close', function(code) {
-	git = spawn(git_cmd, ['commit', '-am', ":checkered_flag: updating code for version " + new_version]);
+
+	//kick off git_cmd process
+	git = spawn(git_cmd, ['commit', '-am', formatted_message]);
 
 	//spit stdout to screen
 	git.stdout.on('data', function(data) { process.stdout.write(data.toString()); });
 
-	// //spit stderr to screen 	
+	//spit stderr to screen 	
 	git.stderr.on('data', function(data) { process.stdout.write(data.toString()); });
 
 	git.on('close', function(code) {
 		console.log("Finished: " + code);
 		console.log("-----------------------------------------------------------");
-	});
 
+		//kick off git_cmd process
+		git = spawn(git_cmd, ['tag', 'v' + new_version]);
+
+		//spit stdout to screen
+		git.stdout.on('data', function(data) {
+			process.stdout.write(data.toString());
+		});
+
+		//spit stderr to screen 	
+		git.stderr.on('data', function(data) {
+			process.stdout.write(data.toString());
+		});
+
+		git.on('close', function(code) {
+			console.log("Finished: " + code);
+			console.log("-----------------------------------------------------------");
+
+		});
+	});
 	console.log("Finished: " + code);
 	console.log("-----------------------------------------------------------");
 });
