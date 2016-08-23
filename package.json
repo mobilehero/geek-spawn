@@ -1,0 +1,38 @@
+{
+  "name": "@geek/spawn",
+  "version": "0.0.1-beta.1",
+  "description": "a cross-platform spawn replacement with promises",
+  "keywords": [],
+  "homepage": "git://github.com/mobilehero/geek-spawn",
+  "bugs": {
+    "url": "https://github.com/mobilehero/geek-spawn/issues",
+    "email": "support@mobilehero.me"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Brenton House",
+    "email": "brenton.house@gmail.com",
+    "url": "https://github.com/brentonhouse"
+  },
+  "main": "./spawn.js",
+  "scripts": {
+    "add": "git add -A",
+    "preadd-version": "npm run add",
+    "add-version": "node npm-scripts/version",
+    "push": "npm run commit --",
+    "commit": "npm run add-version --",
+    "postpush": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mobilehero/geek-spawn.git"
+  },
+  "devDependencies": {
+    "lodash": "^4.15.0",
+    "semver": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=0.12.15"
+  },
+  "dependencies": {}
+}
