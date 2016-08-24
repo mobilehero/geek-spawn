@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require("lodash");
 var child_process = require('child_process');
 var path = require("path");
 var env = Object.assign({}, process.env);
@@ -12,7 +13,7 @@ exports.spawnSync = function(cmd, args, opts) {
 	opts.stdio = 'inherit';
 	opts.env = env;
 
-	if(process.platform === 'win32') {
+	if (process.platform === 'win32') {
 		args = ['/c', cmd].concat(args);
 		cmd = process.env.comspec;
 	}
@@ -22,13 +23,15 @@ exports.spawnSync = function(cmd, args, opts) {
 
 exports.spawn = function(cmd, args, opts) {
 
+	var successfulExitCodes = (opts && opts.successfulExitCodes) || [0];
 	return new Promise(function(resolve, reject) {
 
 		opts = opts || {};
+		opts.successfulExitCodes = opts.successfulExitCodes || [0];
 		opts.stdio = 'inherit';
 		opts.env = env;
 
-		if(process.platform === 'win32') {
+		if (process.platform === 'win32') {
 			args = ['/c', cmd].concat(args);
 			cmd = process.env.comspec;
 		}
@@ -37,7 +40,18 @@ exports.spawn = function(cmd, args, opts) {
 
 		child.on('close', (code, signal) => {
 
-			//TODO: check codes for success/failure
+			if (!_.includes(opts.successfulExitCodes, code)) {
+				var err = {
+					code: code,
+					message: "'" + cmd + " " + _.join(args," ") + "' failed with code " + code,
+					childProcess: child,
+					toString() {
+						return this.message;
+					}
+				};
+
+				reject(err);
+			}
 
 			resolve({
 				code: code,

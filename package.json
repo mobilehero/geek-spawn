@@ -1,6 +1,6 @@
 {
   "name": "@geek/spawn",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1-beta.5",
   "description": "a cross-platform spawn replacement with promises",
   "keywords": [],
   "homepage": "git://github.com/mobilehero/geek-spawn",
