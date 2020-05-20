@@ -33,6 +33,9 @@ exports.spawnSync = function(cmd, args, opts) {
 exports.spawn = function(cmd, args, opts) {
 	let debug = logger('spawn');
 	return new Promise(function(resolve, reject) {
+		if( _.isString(args)){
+			args = args.split(' ');
+		}
 
 		opts = opts || {};
 		_.defaults(opts, {
