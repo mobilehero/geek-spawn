@@ -1,12 +1,11 @@
 {
   "name": "@geek/spawn",
-  "version": "0.0.3",
+  "version": "1.0.1",
   "description": "a cross-platform spawn replacement with promises",
   "keywords": [],
-  "homepage": "git://github.com/mobilehero/geek-spawn",
+  "homepage": "https://www.npmjs.com/package/@geek/spawn",
   "bugs": {
-    "url": "https://github.com/mobilehero/geek-spawn/issues",
-    "email": "support@mobilehero.me"
+    "url": "https://github.com/mobilehero/geek-spawn/issues"
   },
   "license": "MIT",
   "author": {
@@ -16,27 +15,28 @@
   },
   "main": "./spawn.js",
   "scripts": {
-    "add": "git add -A",
-    "preadd-version": "npm run add",
-    "add-version": "node npm-scripts/version",
-    "push": "npm run commit --",
-    "commit": "npm run add-version --",
-    "postpush": "git push && git push --tags",
-    "list-files": "npm pack && tar -xvzf *.tgz && rm -rf package *.tgz"
+    "lint": "eslint . --fix",
+    "list": "npm pack && tar -xvzf *.tgz && rm -rf package *.tgz",
+    "prep": "npm install --ignore-scripts",
+    "test": "npm run prep",
+    "prepublishOnly": "git pull && npm test && bump insane",
+    "prepublishOnly2": "git pull && npm test && npm audit fix && bump insane"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/mobilehero/geek-spawn.git"
   },
   "devDependencies": {
-    "semver": "^5.3.0"
+    "@geek/eslint-config": "^1.0.3",
+    "eslint": "^8.6.0",
+    "semver": "^7.3.5"
   },
   "engines": {
     "node": ">=8"
   },
   "dependencies": {
-    "chalk": "^1.1.3",
-    "debug": "^4.1.1",
-    "lodash": "^4.17.15"
+    "chalk": "^5.0.0",
+    "debug": "^4.3.3",
+    "lodash": "^4.17.21"
   }
 }

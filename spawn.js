@@ -17,7 +17,22 @@ var logger = (func_name) => {
 let debug = logger();
 
 exports.spawnSync = function(cmd, args, opts) {
+	
 	let debug = logger('spawnSync');
+
+	// DEBUG: cmd
+	console.debug(`🦠  cmd: ${JSON.stringify(cmd, null, 2)}`);
+
+	// DEBUG: args
+	console.debug(`🦠  args: ${JSON.stringify(args, null, 2)}`);
+
+	if( _.isString(args)){
+		args = args.split(' ');
+	}
+
+	// DEBUG: args
+	console.debug(`🦠  args: ${JSON.stringify(args, null, 2)}`);
+
 	opts = opts || {};
 	opts.stdio = 'inherit';
 	opts.env = env;
@@ -30,7 +45,36 @@ exports.spawnSync = function(cmd, args, opts) {
 	return child_process.spawnSync(cmd, args, opts);
 }
 
+exports.spawnSync2 = params => {
+	let debug = logger('spawnSync');
+
+	// DEBUG: params
+	console.debug(`🦠  params: ${JSON.stringify(params, null, 2)}`);
+
+	
+	const paramsArray = _.split(_.trim(params), /\s* \s*/g).filter(o => o);
+
+	// DEBUG: paramsArray
+	console.debug(`🦠  paramsArray: ${JSON.stringify(paramsArray, null, 2)}`);
+
+	const cmd = paramsArray[0];
+	const args = _.slice(paramsArray, 1);
+
+	const opts = {
+		stdio: 'inherit',
+		env,
+	};
+
+	if(process.platform === 'win32') {
+		args = ['/c', cmd].concat(args);
+		cmd = process.env.comspec;
+	}
+
+	return child_process.spawnSync(cmd, args, opts);
+}
+
 exports.spawn = function(cmd, args, opts) {
+	// console.debug('📌  you are here → spawn() ');
 	let debug = logger('spawn');
 	return new Promise(function(resolve, reject) {
 		if( _.isString(args)){
@@ -63,6 +107,9 @@ exports.spawn = function(cmd, args, opts) {
 						return this.message;
 					}
 				};
+
+				// DEBUG: err
+				console.debug(`🦠  err: ${JSON.stringify(err, null, 2)}`);
 
 				reject(err);
 			}
