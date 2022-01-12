@@ -1,8 +1,25 @@
 {
   "name": "@geek/spawn",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a cross-platform spawn replacement with promises",
-  "keywords": [],
+  "keywords": [
+    "axway",
+    "appcelerator",
+    "titanium",
+    "mobile",
+    "turbo",
+    "sdk",
+    "plugin",
+    "api-builder",
+    "appcelerator-titanium",
+    "titanium-sdk",
+    "titanium-mobile",
+    "titanium-module",
+    "titanium-alloy",
+    "axway-sdk",
+    "axway-amplify",
+    "brenton-house"
+  ],
   "homepage": "https://www.npmjs.com/package/@geek/spawn",
   "bugs": {
     "url": "https://github.com/mobilehero/geek-spawn/issues"
